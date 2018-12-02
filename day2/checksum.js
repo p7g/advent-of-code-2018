@@ -1,10 +1,5 @@
 const { readFileSync } = require('fs');
-
-const start = Date.now();
-const ids = readFileSync('./input.txt')
-  .toString()
-  .trim()
-  .split('\n');
+const { join } = require('path');
 
 function countLetters(str) {
   /* eslint-disable */
@@ -27,22 +22,25 @@ function countLetters(str) {
   return letters;
 }
 
-const [double, triple] = ids.reduce(([twice, thrice], id) => {
-  const letters = Object.values(countLetters(id));
-  let two = twice;
-  let three = thrice;
-  if (letters.includes(3)) {
-    three += 1;
-  }
-  if (letters.includes(2)) {
-    two += 1;
-  }
-  return [two, three];
-}, [0, 0]);
+const inputPath = join(__dirname, 'input.txt');
+module.exports = function checksum(file = inputPath) {
+  const ids = readFileSync(file)
+    .toString()
+    .trim()
+    .split('\n');
 
-process.stdout.write(`
-double: ${double}
-triple: ${triple}
-checksum: ${double * triple}
-time: ${Date.now() - start}ms
-`);
+  const [double, triple] = ids.reduce(([twice, thrice], id) => {
+    const letters = Object.values(countLetters(id));
+    let two = twice;
+    let three = thrice;
+    if (letters.includes(3)) {
+      three += 1;
+    }
+    if (letters.includes(2)) {
+      two += 1;
+    }
+    return [two, three];
+  }, [0, 0]);
+
+  return double * triple;
+};
