@@ -1,18 +1,13 @@
 const { readFileSync } = require('fs');
 
+const start = Date.now();
 const ids = readFileSync('./input.txt')
   .toString()
   .trim()
   .split('\n');
 
 let common;
-let index;
-let word1;
-let word1Index;
-let word2;
-let word2Index;
 
-const start = Date.now();
 for (let i = 0; i < ids.length; i += 1) {
   const str1 = ids[i];
 comparing: // eslint-disable-line
@@ -28,25 +23,10 @@ comparing: // eslint-disable-line
       }
     }
     if (differentIndex !== undefined) {
-      index = differentIndex;
-      word1 = str1;
-      word1Index = i;
-      word2 = str2;
-      word2Index = j;
       common = str1.substring(0, differentIndex)
         + str1.substring(differentIndex + 1);
     }
   }
 }
 
-if (common) {
-  process.stdout.write(`
-found difference at index ${index} in ${Date.now() - start}ms
-  ${common.substring(0, index)} ${common.substring(index)} (in common)
-  ${word1} (word ${word1Index})
-  ${word2} (word ${word2Index})
-  ${' '.repeat(index)}^
-`);
-} else {
-  process.stdout.write('found nothing\n');
-}
+process.stdout.write(`${common} in ${Date.now() - start}ms\n`);
