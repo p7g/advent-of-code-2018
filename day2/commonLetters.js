@@ -13,16 +13,16 @@ let word2;
 let word2Index;
 
 const start = Date.now();
-for (let i = 0; i < ids.length; i++) {
+for (let i = 0; i < ids.length; i += 1) {
   const str1 = ids[i];
-comparing:
-  for (let j = i + 1; j < ids.length; j++) {
+comparing: // eslint-disable-line
+  for (let j = i + 1; j < ids.length; j += 1) {
     const str2 = ids[j];
     let differentIndex;
-    for (let k = 0; k < str1.length; k++) {
+    for (let k = 0; k < str1.length; k += 1) {
       if (str1[k] !== str2[k]) {
         if (differentIndex !== undefined) {
-          continue comparing;
+          continue comparing; // eslint-disable-line
         }
         differentIndex = k;
       }
@@ -40,14 +40,13 @@ comparing:
 }
 
 if (common) {
-  console.log(`
+  process.stdout.write(`
 found difference at index ${index} in ${Date.now() - start}ms
   ${common.substring(0, index)} ${common.substring(index)} (in common)
   ${word1} (word ${word1Index})
   ${word2} (word ${word2Index})
-  ${' '.repeat(index) + '^'}
+  ${' '.repeat(index)}^
 `);
-}
-else {
-  console.log('found nothing');
+} else {
+  process.stdout.write('found nothing\n');
 }

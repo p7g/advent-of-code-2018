@@ -7,17 +7,20 @@ let frequency;
 const seen = new Set();
 let previous = 0;
 
-while (!frequency) {
-  lines.find(number => {
-    const newFrequency = previous + number;
-    if (seen.has(newFrequency)) {
-      frequency = newFrequency;
-      return true;
-    }
+const findFn = (number) => {
+  const newFrequency = previous + number;
+  if (seen.has(newFrequency)) {
+    frequency = newFrequency;
+    return true;
+  }
 
-    seen.add(newFrequency);
-    previous = newFrequency;
-  });
+  seen.add(newFrequency);
+  previous = newFrequency;
+  return false;
+};
+
+while (!frequency) {
+  lines.find(findFn);
 }
 
-console.log(`found %d twice`, frequency);
+process.stdout.write(`found ${frequency} twice\n`);
