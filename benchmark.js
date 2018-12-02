@@ -10,11 +10,13 @@ function doSuite(name, functions) {
   process.stdout.write('\n');
 }
 
+/* eslint-disable */
 doSuite('Day 1', [
-  require('./day1/totalFrequency'),
-  require('./day1/repeatedFrequency'),
+  require('./days/1/totalFrequency'),
+  require('./days/1/repeatedFrequency'),
 ]);
 doSuite('Day 2', [
-  require('./day2/checksum'),
-  require('./day2/commonLetters'),
+  require('./days/2/checksum'),
+  require('./days/2/commonLetters'),
 ]);
+/* eslint-enable */
