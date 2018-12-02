@@ -1,11 +1,5 @@
 const Benchmark = require('benchmark');
 
-const totalFrequency = require('./day1/totalFrequency');
-const repeatedFrequency = require('./day1/repeatedFrequency');
-
-const checksum = require('./day2/checksum');
-const commonLetters = require('./day2/commonLetters');
-
 function doSuite(name, functions) {
   process.stdout.write(`${name}\n`);
   const s = new Benchmark.Suite(name);
@@ -16,5 +10,11 @@ function doSuite(name, functions) {
   process.stdout.write('\n');
 }
 
-doSuite('Day 1', [totalFrequency, repeatedFrequency]);
-doSuite('Day 2', [checksum, commonLetters]);
+doSuite('Day 1', [
+  require('./day1/totalFrequency'),
+  require('./day1/repeatedFrequency'),
+]);
+doSuite('Day 2', [
+  require('./day2/checksum'),
+  require('./day2/commonLetters'),
+]);
