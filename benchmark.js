@@ -20,14 +20,3 @@ days.forEach((day) => {
   // eslint-disable-next-line
   doSuite(name, parts.map((file) => require(join(dir, file))));
 });
-
-/*
-doSuite('Day 1', [
-  require('./days/1/totalFrequency'),
-  require('./days/1/repeatedFrequency'),
-]);
-doSuite('Day 2', [
-  require('./days/2/checksum'),
-  require('./days/2/commonLetters'),
-]);
-*/
