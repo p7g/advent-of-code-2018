@@ -3,18 +3,29 @@
 const yargs = require('yargs');
 const { readdirSync } = require('fs');
 const { join } = require('path');
-const Benchmark = require('benchmark');
+const Benchmark = require('mini-bench');
 
 function doSuite(name, functions) {
-  process.stdout.write(`${name}\n`);
-  const s = new Benchmark.Suite(name);
-  functions.forEach(fn => s.add(fn.name, fn));
-  s.on('cycle', e => process.stdout.write(
-    `${e.target} = ${JSON.stringify(e.target.fn())} (${
-      (e.target.times.period * 1000).toFixed(2)
-    }ms)\n`,
-  )).run({ async: false });
-  process.stdout.write('\n');
+  return new Promise((resolve) => {
+    const result = {};
+    const s = new Benchmark.Suite({
+      start: () => process.stdout.write(`${name}\n`),
+      result: (n, stats) => process.stdout.write(
+        `${n}: got ${result[n]} in ${
+          (stats.elapsed / stats.iterations).toFixed(2)
+        }ms\n`,
+      ),
+      done: () => {
+        process.stdout.write('\n');
+        resolve();
+      },
+    });
+    functions.forEach(fn => s.bench(fn.name, (next) => {
+      result[fn.name] = fn();
+      next();
+    }));
+    s.run({ async: false });
+  });
 }
 
 const days = readdirSync(join(__dirname, 'days'));
@@ -29,13 +40,14 @@ const args = yargs
       describe: 'the day to benchmark, or all if none provided',
     });
   }, ({ day: d }) => {
-    ([d.toString()] || days).forEach((day) => {
+    ((d && [d.toString()]) || days).reduce(async (promise, day) => {
       const name = `day ${day}`;
       const dir = join(__dirname, 'days', day);
       const parts = readdirSync(dir).filter(file => file.endsWith('.js'));
+      await promise;
       // eslint-disable-next-line
-      doSuite(name, parts.map(file => require(join(dir, file))));
-    });
+      return doSuite(name, parts.map(file => require(join(dir, file))));
+    }, Promise.resolve());
   })
   .demandCommand()
   .recommendCommands()
