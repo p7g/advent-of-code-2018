@@ -45,8 +45,12 @@ const args = yargs
       const dir = join(__dirname, 'days', day);
       const parts = readdirSync(dir).filter(file => file.endsWith('.js'));
       await promise;
-      // eslint-disable-next-line
-      return doSuite(name, parts.map(file => require(join(dir, file))));
+      return doSuite(
+        name,
+        parts
+          .filter(s => s[0] !== '.' && s[0] === s[0].toLowerCase())
+          .map(file => require(join(dir, file))), // eslint-disable-line
+      );
     }, Promise.resolve());
   })
   .demandCommand()
